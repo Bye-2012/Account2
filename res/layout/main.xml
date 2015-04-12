@@ -3,12 +3,69 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
+              android:background="@drawable/bg1"
         >
 
-    <TextView
-            android:layout_width="fill_parent"
+    <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World, MainActivity"
-            />
+            android:background="@drawable/title"
+            android:gravity="center"
+            >
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="简单记账"
+                android:textColor="#000"
+                android:textSize="35sp"
+                />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="20dp"
+            android:layout_marginTop="30dp"
+            >
+        <ImageView
+                android:id="@+id/imageView_write"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/write"
+                android:onClick="clickImage"
+                />
+        <ImageView
+                android:id="@+id/imageView_detail"
+                android:layout_marginLeft="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/detail"
+                android:onClick="clickImage"
+                />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:gravity="center"
+            >
+        <ImageView
+                android:id="@+id/imageView_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/report"
+                android:onClick="clickImage"
+                />
+        <ImageView
+                android:id="@+id/imageView_exit"
+                android:layout_marginLeft="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/exit"
+                android:onClick="clickImage"
+                />
+    </LinearLayout>
 </LinearLayout>
 

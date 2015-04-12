@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="types_out">
+        <item>吃</item>
+        <item>穿</item>
+        <item>住</item>
+        <item>行</item>
+        <item>用</item>
+    </string-array>
+    <string-array name="types_eat">
+        <item>日常</item>
+        <item>请客</item>
+        <item>烟酒</item>
+    </string-array>
+    <string-array name="types_cloth">
+        <item>自用</item>
+        <item>礼物</item>
+    </string-array>
+    <string-array name="types_home">
+        <item>房租</item>
+        <item>水电费</item>
+    </string-array>
+    <string-array name="types_go">
+        <item>公共交通</item>
+        <item>出租</item>
+    </string-array>
+    <string-array name="types_use">
+        <item>学习用品</item>
+        <item>生活用品</item>
+    </string-array>
+    <string-array name="types_in">
+        <item>工资</item>
+        <item>外快</item>
+    </string-array>
+    <string-array name="date_type">
+        <item>按日显示</item>
+        <item>按周显示</item>
+        <item>按月显示</item>
+        <item>按年显示</item>
+    </string-array>
+</resources>
