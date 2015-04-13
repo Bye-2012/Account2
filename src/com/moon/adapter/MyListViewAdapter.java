@@ -55,10 +55,10 @@ public class MyListViewAdapter extends BaseAdapter {
         }else
             viewHolder = (ViewHolder) view.getTag();
         if (list != null) {
-            viewHolder.textView_detail_date.setText(list.get(i).get("dates").toString());
+            viewHolder.textView_detail_date.setText(list.get(i).get("date").toString());
             viewHolder.textView_detail_type.setText(list.get(i).get("type").toString());
             viewHolder.textView_detail_detail.setText(list.get(i).get("detail").toString());
-            viewHolder.textView_detail_comment.setText(list.get(i).get("comments").toString());
+            viewHolder.textView_detail_comment.setText(list.get(i).get("comment").toString());
             viewHolder.textView_detail_money.setText(list.get(i).get("money").toString());
         }
         return view;

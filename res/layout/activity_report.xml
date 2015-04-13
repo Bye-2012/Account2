@@ -4,6 +4,30 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            >
+        <com.moon.myview.ChartView
+                android:id="@+id/my_chart_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+        <com.moon.myview.ChartView
+                android:layout_marginTop="30dp"
+                android:id="@+id/my_chart_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+    </LinearLayout>
+
 
 
 </LinearLayout>

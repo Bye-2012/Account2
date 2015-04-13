@@ -33,7 +33,6 @@
                 />
         <activity
                 android:name=".ReportActivity"
-                android:theme="@style/otherTheme"
                 />
     </application>
 </manifest>

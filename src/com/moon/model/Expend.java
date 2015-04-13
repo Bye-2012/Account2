@@ -1,28 +1,31 @@
 package com.moon.model;
 
-import com.lidroid.xutils.db.annotation.Column;
-import com.lidroid.xutils.db.annotation.Id;
-import com.lidroid.xutils.db.annotation.Table;
-
 /**
  * Created with IntelliJ IDEA
  * User: Moon
  * Date: 2015/4/12.
  */
 
-/**
- * 收入表:id,type,money,date,comment
- */
+import com.lidroid.xutils.db.annotation.Column;
+import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
 
-@Table(name = "incomes")
-public class Income {
+/**
+ * 支出表：id,type,detail,money,date,comment
+ */
+@Table(name = "expends")
+public class Expend {
+
     @Id(column = "_id")
     private long id;
 
     @Column(column = "type")
     private int type;
 
-    @Column(column = "money", defaultValue = "0")
+    @Column(column = "detail")
+    private int detail;
+
+    @Column(column = "money")
     private float money;
 
     @Column(column = "dates")
@@ -45,6 +48,14 @@ public class Income {
 
     public void setDate(String dates) {
         this.dates = dates;
+    }
+
+    public int getDetail() {
+        return detail;
+    }
+
+    public void setDetail(int detail) {
+        this.detail = detail;
     }
 
     public long getId() {

@@ -5,8 +5,12 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.view.annotation.ViewInject;
+import com.moon.model.Expend;
+import com.moon.model.Income;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,14 +43,13 @@ public class WriteActivity extends Activity {
     private ArrayAdapter<String> adapter_details;
 
     private int flag = 1;
-    private int currentType;
-    private String type;
-    private String detail;
-    private String money;
-    private String comment;
+    private int type;
+    private int detail;
     private String date;
 
     private Calendar calendar = Calendar.getInstance();
+
+    private DbUtils db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,11 +61,22 @@ public class WriteActivity extends Activity {
         initListeners();
     }
 
+    /**
+     * 初始化界面
+     */
     private void initView() {
         ViewUtils.inject(this);
     }
 
+    /**
+     * 初始化显示数据
+     */
     private void initDate() {
+        db = DbUtils.create(this, "account.db", 1, new DbUtils.DbUpgradeListener() {
+            @Override
+            public void onUpgrade(DbUtils dbUtils, int i, int i1) {
+            }
+        });
         details = new ArrayList<List<String>>();
         date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         textView_date.setText(date);
@@ -71,6 +85,9 @@ public class WriteActivity extends Activity {
         setDetail(0);
     }
 
+    /**
+     * 设置监听
+     */
     private void initListeners() {
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -97,15 +114,7 @@ public class WriteActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 setDetail(i);
-                currentType = i;
-                switch (flag) {
-                    case 1:
-                        type = types_out[i];
-                        break;
-                    case 2:
-                        type = types_in[i];
-                        break;
-                }
+                type = i;
             }
 
             @Override
@@ -116,7 +125,7 @@ public class WriteActivity extends Activity {
         spinner_detail.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                detail = details.get(currentType).get(i);
+                detail = i;
             }
 
             @Override
@@ -125,6 +134,9 @@ public class WriteActivity extends Activity {
         });
     }
 
+    /**
+     * 设置Spinner_type
+     */
     private void setType() {
         if (flag == 1) {
             setTypeAdapter(types_out);
@@ -133,11 +145,19 @@ public class WriteActivity extends Activity {
         }
     }
 
+    /**
+     * 设置Spinner_detail
+     *
+     * @param i
+     */
     private void setDetail(int i) {
         setDetailAdapter(i);
     }
 
-    private void getData() {
+    /**
+     * 获得xml文件数据
+     */
+    public void getData() {
         types_in = getArray(R.array.types_in);
         types_out = getArray(R.array.types_out);
         details.add(getList(R.array.types_eat));
@@ -147,26 +167,51 @@ public class WriteActivity extends Activity {
         details.add(getList(R.array.types_use));
     }
 
-    private String[] getArray(int id) {
+    /**
+     * 获得Array数据
+     * @param id
+     * @return
+     */
+    public String[] getArray(int id) {
         return getResources().getStringArray(id);
     }
 
-    private List<String> getList(int id) {
+    /**
+     * 获得List数据
+     * @param id
+     * @return
+     */
+    public List<String> getList(int id) {
         return Arrays.asList(getArray(id));
     }
 
+    /**
+     * 设置type适配器
+     *
+     * @param type
+     */
     private void setTypeAdapter(String[] type) {
         adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, type);
         adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_type.setAdapter(adapter_type);
     }
 
+    /**
+     * 设置detail适配器
+     *
+     * @param i
+     */
     private void setDetailAdapter(int i) {
         adapter_details = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, details.get(i));
         adapter_details.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_detail.setAdapter(adapter_details);
     }
 
+    /**
+     * 点击事件
+     *
+     * @param v
+     */
     public void clickButton(View v) {
         switch (v.getId()) {
             case R.id.btn_chose_date:
@@ -184,7 +229,25 @@ public class WriteActivity extends Activity {
                 dDialog.show();
                 break;
             case R.id.btn_save:
-                Toast.makeText(this, type + ":" + detail + ":" + editText_money.getText() + ":" + date + ":" + editText_comment.getText(), Toast.LENGTH_LONG).show();
+                switch(flag){
+                    case 1:
+                        Expend expend = new Expend();
+                        expend.setType(type);
+                        expend.setDetail(detail);
+                        expend.setMoney(Integer.parseInt(editText_money.getText().toString()));
+                        expend.setComment(editText_comment.getText().toString());
+                        expend.setDate(date);
+                        save(expend);
+                        break;
+                    case 2:
+                        Income income = new Income();
+                        income.setType(type);
+                        income.setMoney(Integer.parseInt(editText_money.getText().toString()));
+                        income.setComment(editText_comment.getText().toString());
+                        income.setDate(date);
+                        save(income);
+                        break;
+                }
                 break;
             case R.id.btn_exit:
                 finish();
@@ -224,8 +287,24 @@ public class WriteActivity extends Activity {
         return d;
     }
 
+    /**
+     * 清空输入框
+     */
     private void emptyText() {
         editText_money.setText("");
         editText_comment.setText("");
+    }
+
+    /**
+     * 保存到数据库
+     * @param obj
+     */
+    private void save(Object obj){
+        try {
+            db.save(obj);
+            Toast.makeText(this,"ok",Toast.LENGTH_SHORT).show();
+        } catch (DbException e) {
+            Toast.makeText(this,"error",Toast.LENGTH_SHORT).show();
+        }
     }
 }
