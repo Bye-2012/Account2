@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -76,13 +75,13 @@ public class ChartView extends View {
             startAngle += sweepAngle;
         }
 
-        int height = 10;
+        int height = 50;
         //循环画图
         for (int i = 0; i < data.length; i++) {
-            height += 50;
             arcPaint.setColor(colors[i]);
-            canvas.drawRect(300, height, 350, height + 40, arcPaint);
-            canvas.drawText(arrTitle[i], 360, height + 35, textPaint);
+            canvas.drawRect(315, height, 350, height + 35, arcPaint);
+            canvas.drawText(arrTitle[i], 365, height + 30, textPaint);
+            height += 50;
         }
     }
 
@@ -92,12 +91,8 @@ public class ChartView extends View {
     public void setData(float[] data, String[] arrTitle) {
         this.data = data;
         this.arrTitle = arrTitle;
-
-        for (int i = 0; i < data.length; i++) {
-            Log.i("---", data[i] + "");
-            Log.i("---", arrTitle[i]);
+        if (data != null && arrTitle != null) {
+            invalidate();
         }
-
-        invalidate();
     }
 }
