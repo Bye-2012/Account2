@@ -12,8 +12,9 @@
                 android:id="@+id/txt_rep_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="本月数据统计"
+                android:text="数据统计"
                 android:gravity="center"
+                android:textSize="25sp"
                 />
     </LinearLayout>
 
@@ -52,6 +53,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="按日"
+                android:onClick="clickButton"
                 />
         <Button
                 android:id="@+id/btn_rep_mon"
@@ -59,6 +61,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="按月"
+                android:onClick="clickButton"
                 />
         <Button
                 android:id="@+id/btn_rep_year"
@@ -66,6 +69,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="按年"
+                android:onClick="clickButton"
                 />
     </LinearLayout>
 

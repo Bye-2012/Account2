@@ -11,9 +11,9 @@ import android.util.Log;
 import android.view.View;
 
 /**
- * Created by IDEA
- * user:witt
- * date:15-4-9
+ * Created with IntelliJ IDEA
+ * User: Moon
+ * Date: 2015/4/12.
  */
 
 public class ChartView extends View {
@@ -25,8 +25,8 @@ public class ChartView extends View {
     private float[] data;
     private String[] arrTitle;
     private int[] colors;
-    private float startAngle;
-    private float sweepAngle;
+
+    private int flag = 0;
 
     public ChartView(Context context) {
         this(context, null);
@@ -45,18 +45,26 @@ public class ChartView extends View {
      * 初始化方法
      */
     private void init(Context context, AttributeSet attrs) {
-
+        /**
+         * 初始化图形画笔
+         */
         arcPaint = new Paint();
         arcPaint.setStyle(Paint.Style.FILL);
         arcPaint.setAntiAlias(true);
-        arcRectF = new RectF(10, 30, 250, 270);
+        arcRectF = new RectF(30, 50, 360, 380);
 
+        /**
+         * 初始化文字画笔
+         */
         textPaint = new TextPaint();
         textPaint.setColor(Color.BLACK);
-        textPaint.setTextSize(40);
+        textPaint.setTextSize(25);
 
-        data = new float[]{50, 40, 8, 1, 1};
-        arrTitle = new String[]{"Android", "IOS", "windows phone", "blackberry", "other"};
+        /**
+         * 初始化文字数据和颜色
+         */
+        data = new float[]{-1};
+        arrTitle = new String[]{"1"};
         colors = new int[]{Color.GREEN, Color.RED, Color.YELLOW, Color.BLACK, Color.BLUE};
     }
 
@@ -65,12 +73,11 @@ public class ChartView extends View {
         super.onDraw(canvas);
         //TODO 绘制饼状图
         //清空内容
-
         canvas.drawColor(Color.WHITE);
 
-        if (data[0] != -1) {
-            startAngle = 0;
-            sweepAngle = 0;
+        if (flag == 1) {
+            float startAngle = 0;
+            float sweepAngle;
             //循环画出占有率
             for (int i = 0; i < data.length; i++) {
                 sweepAngle = 360 * data[i];
@@ -79,16 +86,23 @@ public class ChartView extends View {
                 startAngle += sweepAngle;
             }
 
-            int height = 50;
+            textPaint.setTextSize(25);
+
+            int height = 0;
+            if (data.length == 5){
+                height = 110;
+            }else if(data.length == 2){
+                height = 185;
+            }
             //循环画图
             for (int i = 0; i < data.length; i++) {
                 arcPaint.setColor(colors[i]);
-                canvas.drawRect(315, height, 350, height + 35, arcPaint);
-                canvas.drawText(arrTitle[i], 365, height + 30, textPaint);
-                height += 50;
+                canvas.drawRect(405, height, 425, height + 20, arcPaint);
+                canvas.drawText(arrTitle[i]+" ("+(data[i]*100)+"%)", 445, height + 20, textPaint);
+                height += 40;
             }
-        }else if (data[0] == -1){
-            arcPaint.setColor(Color.BLACK);
+        }else if (flag == 0){
+            textPaint.setTextSize(40);
             switch(data.length){
                 case 2:
                     canvas.drawText("暂无收入数据", 50, 80, textPaint);
@@ -107,9 +121,11 @@ public class ChartView extends View {
         this.data = data;
         this.arrTitle = arrTitle;
         if (data != null && arrTitle != null) {
-
-            Log.i("1111","date:"+data[0]+","+data[data.length-1]);
-
+            for (int i = 0; i < data.length; i++) {
+                if((int)(data[0]*1000 - 0) == 0){
+                    flag = 1;
+                }
+            }
             invalidate();
         }
     }

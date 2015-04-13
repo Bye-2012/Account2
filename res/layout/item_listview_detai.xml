@@ -7,7 +7,7 @@
             android:id="@+id/l1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0f0"
+            android:background="#3300ff00"
             >
         <TextView
                 android:id="@+id/textView_detail_date"
@@ -24,7 +24,7 @@
             android:id="@+id/l2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFB6C1"
+            android:background="#33FFB6C1"
             >
         <TextView
                 android:id="@+id/textView_detail_type"
@@ -50,7 +50,7 @@
             android:layout_below="@id/l2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFB6C1"
+            android:background="#33FFB6C1"
             >
 
         <TextView

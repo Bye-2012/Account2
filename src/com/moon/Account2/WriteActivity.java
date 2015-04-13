@@ -25,24 +25,28 @@ import java.util.*;
 public class WriteActivity extends Activity {
     @ViewInject(R.id.radioGroup)
     private RadioGroup rg;
+
     @ViewInject(R.id.spinner_type)
     private Spinner spinner_type;
+
     @ViewInject(R.id.spinner_detail)
     private Spinner spinner_detail;
+
     @ViewInject(R.id.textView_date)
     private TextView textView_date;
+
     @ViewInject(R.id.editText_money)
     private EditText editText_money;
+
     @ViewInject(R.id.editText_comment)
     private EditText editText_comment;
+
     @ViewInject(R.id.layout_details)
     private LinearLayout layout_details;
 
     private String[] types_in;
     private String[] types_out;
     private List<List<String>> details;
-    private ArrayAdapter<String> adapter_type;
-    private ArrayAdapter<String> adapter_details;
 
     private int flag = 1;
     private int type;
@@ -171,6 +175,7 @@ public class WriteActivity extends Activity {
 
     /**
      * 获得Array数据
+     *
      * @param id
      * @return
      */
@@ -180,6 +185,7 @@ public class WriteActivity extends Activity {
 
     /**
      * 获得List数据
+     *
      * @param id
      * @return
      */
@@ -193,7 +199,7 @@ public class WriteActivity extends Activity {
      * @param type
      */
     private void setTypeAdapter(String[] type) {
-        adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, type);
+        ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, type);
         adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_type.setAdapter(adapter_type);
     }
@@ -204,7 +210,7 @@ public class WriteActivity extends Activity {
      * @param i
      */
     private void setDetailAdapter(int i) {
-        adapter_details = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, details.get(i));
+        ArrayAdapter<String> adapter_details = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, details.get(i));
         adapter_details.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_detail.setAdapter(adapter_details);
     }
@@ -216,6 +222,9 @@ public class WriteActivity extends Activity {
      */
     public void clickButton(View v) {
         switch (v.getId()) {
+            /**
+             * 日期选择对话框
+             */
             case R.id.btn_chose_date:
                 int year = calendar.get(Calendar.YEAR);
                 int monthOfYear = calendar.get(Calendar.MONTH);
@@ -230,8 +239,11 @@ public class WriteActivity extends Activity {
                         }, year, monthOfYear, dayOfMonth);
                 dDialog.show();
                 break;
+            /**
+             * 保存数据
+             */
             case R.id.btn_save:
-                switch(flag){
+                switch (flag) {
                     case 1:
                         Expend expend = new Expend();
                         expend.setType(type);
@@ -251,8 +263,11 @@ public class WriteActivity extends Activity {
                         break;
                 }
                 break;
+            /**
+             * 打开二维码扫描功能
+             */
             case R.id.btn_scan:
-                Intent openCameraIntent = new Intent(this,CaptureActivity.class);
+                Intent openCameraIntent = new Intent(this, CaptureActivity.class);
                 startActivityForResult(openCameraIntent, 0);
                 break;
         }
@@ -275,7 +290,7 @@ public class WriteActivity extends Activity {
      * @param monthOfYear
      * @return
      */
-    private String getMonth(int monthOfYear) {
+    public static String getMonth(int monthOfYear) {
         String m;
         if ((monthOfYear + 1) / 10 == 0) {
             m = "0" + (monthOfYear + 1);
@@ -291,7 +306,7 @@ public class WriteActivity extends Activity {
      * @param dayOfMonth
      * @return
      */
-    private String getDay(int dayOfMonth) {
+    public static String getDay(int dayOfMonth) {
         String d;
         if (dayOfMonth / 10 == 0) {
             d = "0" + dayOfMonth;
@@ -311,14 +326,15 @@ public class WriteActivity extends Activity {
 
     /**
      * 保存到数据库
+     *
      * @param obj
      */
-    private void save(Object obj){
+    private void save(Object obj) {
         try {
             db.save(obj);
-            Toast.makeText(this,"ok",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
         } catch (DbException e) {
-            Toast.makeText(this,"error",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
         }
     }
 }

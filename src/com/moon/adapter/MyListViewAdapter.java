@@ -59,7 +59,7 @@ public class MyListViewAdapter extends BaseAdapter {
             viewHolder.textView_detail_type.setText(list.get(i).get("type").toString());
             viewHolder.textView_detail_detail.setText(list.get(i).get("detail").toString());
             viewHolder.textView_detail_comment.setText(list.get(i).get("comment").toString());
-            viewHolder.textView_detail_money.setText(list.get(i).get("money").toString());
+            viewHolder.textView_detail_money.setText(list.get(i).get("money").toString()+"元");
         }
         return view;
     }
