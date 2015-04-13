@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -24,6 +25,8 @@ public class ChartView extends View {
     private float[] data;
     private String[] arrTitle;
     private int[] colors;
+    private float startAngle;
+    private float sweepAngle;
 
     public ChartView(Context context) {
         this(context, null);
@@ -65,23 +68,35 @@ public class ChartView extends View {
 
         canvas.drawColor(Color.WHITE);
 
-        float startAngle = 0;
-        float sweepAngle = 0;
-        //循环画出占有率
-        for (int i = 0; i < data.length; i++) {
-            sweepAngle = 360 * data[i];
-            arcPaint.setColor(colors[i]);
-            canvas.drawArc(arcRectF, startAngle, sweepAngle, true, arcPaint);
-            startAngle += sweepAngle;
-        }
+        if (data[0] != -1) {
+            startAngle = 0;
+            sweepAngle = 0;
+            //循环画出占有率
+            for (int i = 0; i < data.length; i++) {
+                sweepAngle = 360 * data[i];
+                arcPaint.setColor(colors[i]);
+                canvas.drawArc(arcRectF, startAngle, sweepAngle, true, arcPaint);
+                startAngle += sweepAngle;
+            }
 
-        int height = 50;
-        //循环画图
-        for (int i = 0; i < data.length; i++) {
-            arcPaint.setColor(colors[i]);
-            canvas.drawRect(315, height, 350, height + 35, arcPaint);
-            canvas.drawText(arrTitle[i], 365, height + 30, textPaint);
-            height += 50;
+            int height = 50;
+            //循环画图
+            for (int i = 0; i < data.length; i++) {
+                arcPaint.setColor(colors[i]);
+                canvas.drawRect(315, height, 350, height + 35, arcPaint);
+                canvas.drawText(arrTitle[i], 365, height + 30, textPaint);
+                height += 50;
+            }
+        }else if (data[0] == -1){
+            arcPaint.setColor(Color.BLACK);
+            switch(data.length){
+                case 2:
+                    canvas.drawText("暂无收入数据", 50, 80, textPaint);
+                    break;
+                case 5:
+                    canvas.drawText("暂无支出数据", 50, 80, textPaint);
+                    break;
+            }
         }
     }
 
@@ -92,6 +107,9 @@ public class ChartView extends View {
         this.data = data;
         this.arrTitle = arrTitle;
         if (data != null && arrTitle != null) {
+
+            Log.i("1111","date:"+data[0]+","+data[data.length-1]);
+
             invalidate();
         }
     }

@@ -2,6 +2,7 @@ package com.moon.Account2;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -11,6 +12,7 @@ import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.moon.model.Expend;
 import com.moon.model.Income;
+import com.moon.zxing.activity.CaptureActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -249,9 +251,21 @@ public class WriteActivity extends Activity {
                         break;
                 }
                 break;
-            case R.id.btn_exit:
-                finish();
+            case R.id.btn_scan:
+                Intent openCameraIntent = new Intent(this,CaptureActivity.class);
+                startActivityForResult(openCameraIntent, 0);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //处理扫描结果（在界面上显示）
+        if (resultCode == RESULT_OK) {
+            Bundle bundle = data.getExtras();
+            String scanResult = bundle.getString("result");
+            editText_comment.setText(scanResult);
         }
     }
 

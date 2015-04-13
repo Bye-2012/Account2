@@ -101,29 +101,33 @@ public class DetailActivity extends FragmentActivity {
                             break;
                     }
                     es = db.findAll(Selector.from(Expend.class).where(builder));
-                    for (Expend e : es) {
-                        Map<String, Object> map = new HashMap<String, Object>();
-                        all_out += e.getMoney();
-                        map.put("money", e.getMoney());
-                        int type = e.getType();
-                        map.put("type", types_out[type]);
-                        map.put("detail", details.get(type).get(e.getDetail()));
-                        map.put("date", e.getDate());
-                        map.put("comment", e.getComment());
-                        list_detail.add(map);
-                        map = null;
+                    if (es != null && es.size()!= 0) {
+                        for (Expend e : es) {
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            all_out += e.getMoney();
+                            map.put("money", e.getMoney());
+                            int type = e.getType();
+                            map.put("type", types_out[type]);
+                            map.put("detail", details.get(type).get(e.getDetail()));
+                            map.put("date", e.getDate());
+                            map.put("comment", e.getComment());
+                            list_detail.add(map);
+                            map = null;
+                        }
                     }
                     is = db.findAll(Selector.from(Income.class).where(builder));
-                    for (Income income : is) {
-                        Map<String, Object> map = new HashMap<String, Object>();
-                        all_in += income.getMoney();
-                        map.put("money", income.getMoney());
-                        map.put("type", "收入");
-                        map.put("detail", types_in[income.getType()]);
-                        map.put("date", income.getDate());
-                        map.put("comment", income.getComment());
-                        list_detail.add(map);
-                        map = null;
+                    if (is != null && is.size()!= 0) {
+                        for (Income income : is) {
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            all_in += income.getMoney();
+                            map.put("money", income.getMoney());
+                            map.put("type", "收入");
+                            map.put("detail", types_in[income.getType()]);
+                            map.put("date", income.getDate());
+                            map.put("comment", income.getComment());
+                            list_detail.add(map);
+                            map = null;
+                        }
                     }
                     adapter_detail.notifyDataSetChanged();
                     txt_detail_in.setText(all_in+"");
