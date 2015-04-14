@@ -26,8 +26,8 @@ public class GetDbData {
     private float[][] money_count;
     private List<List<String>> details;
 
-    public GetDbData(Context context, DbUtils db){
-        this(context,db,null);
+    public GetDbData(Context context, DbUtils db) {
+        this(context, db, null);
     }
 
     public GetDbData(Context context, DbUtils db, List<List<String>> details) {
@@ -40,12 +40,13 @@ public class GetDbData {
     }
 
     /**
-     *  获得ListView显示数据
+     * 获得ListView显示数据
+     *
      * @param builder 查询条件
-     * @param list List<Map<String, Object>>
+     * @param list    List<Map<String, Object>>
      * @return 数据集
      */
-    public List<Map<String, Object>> getListData(WhereBuilder builder,List<Map<String,Object>> list) {
+    public List<Map<String, Object>> getListData(WhereBuilder builder, List<Map<String, Object>> list, int type) {
         list.clear();
         money_count[0] = new float[5];
         money_count[1] = new float[2];
@@ -54,60 +55,64 @@ public class GetDbData {
         List<Expend> es;
         List<Income> is;
         try {
-            es = db.findAll(Selector.from(Expend.class).where(builder).orderBy("dates", true));
-            if (es != null && es.size() != 0) {
-                for (Expend e : es) {
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    float money = e.getMoney();
-                    all_out += money;
-                    switch (e.getType()) {
-                        case 0:
-                            money_count[0][0] += money;
-                            break;
-                        case 1:
-                            money_count[0][1] += money;
-                            break;
-                        case 2:
-                            money_count[0][2] += money;
-                            break;
-                        case 3:
-                            money_count[0][3] += money;
-                            break;
-                        case 4:
-                            money_count[0][4] += money;
-                            break;
+            if (type == 3 || type == 1) {
+                es = db.findAll(Selector.from(Expend.class).where(builder).orderBy("dates", true));
+                if (es != null && es.size() != 0) {
+                    for (Expend e : es) {
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        float money = e.getMoney();
+                        all_out += money;
+                        switch (e.getType()) {
+                            case 0:
+                                money_count[0][0] += money;
+                                break;
+                            case 1:
+                                money_count[0][1] += money;
+                                break;
+                            case 2:
+                                money_count[0][2] += money;
+                                break;
+                            case 3:
+                                money_count[0][3] += money;
+                                break;
+                            case 4:
+                                money_count[0][4] += money;
+                                break;
+                        }
+                        map.put("money", money);
+                        int t = e.getType();
+                        map.put("type", types_out[t]);
+                        if (details != null) {
+                            map.put("detail", details.get(t).get(e.getDetail()));
+                        }
+                        map.put("date", e.getDate());
+                        map.put("comment", e.getComment());
+                        list.add(map);
                     }
-                    map.put("money", money);
-                    int type = e.getType();
-                    map.put("type", types_out[type]);
-                    if (details != null) {
-                        map.put("detail", details.get(type).get(e.getDetail()));
-                    }
-                    map.put("date", e.getDate());
-                    map.put("comment", e.getComment());
-                    list.add(map);
                 }
             }
-            is = db.findAll(Selector.from(Income.class).where(builder).orderBy("dates", true));
-            if (is != null && is.size() != 0) {
-                for (Income income : is) {
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    float money = income.getMoney();
-                    all_in += money;
-                    map.put("money", money);
-                    switch (income.getType()) {
-                        case 0:
-                            money_count[1][0] += money;
-                            break;
-                        case 1:
-                            money_count[1][1] += money;
-                            break;
+            if (type == 3 || type == 2) {
+                is = db.findAll(Selector.from(Income.class).where(builder).orderBy("dates", true));
+                if (is != null && is.size() != 0) {
+                    for (Income income : is) {
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        float money = income.getMoney();
+                        all_in += money;
+                        map.put("money", money);
+                        switch (income.getType()) {
+                            case 0:
+                                money_count[1][0] += money;
+                                break;
+                            case 1:
+                                money_count[1][1] += money;
+                                break;
+                        }
+                        map.put("type", "收入");
+                        map.put("detail", types_in[income.getType()]);
+                        map.put("date", income.getDate());
+                        map.put("comment", income.getComment());
+                        list.add(map);
                     }
-                    map.put("type", "收入");
-                    map.put("detail", types_in[income.getType()]);
-                    map.put("date", income.getDate());
-                    map.put("comment", income.getComment());
-                    list.add(map);
                 }
             }
             counts[0] = all_out;
@@ -119,7 +124,8 @@ public class GetDbData {
     }
 
     /**
-     *  获得收/支总数
+     * 获得收/支总数
+     *
      * @return float[]
      */
     public float[] getCounts() {
@@ -127,8 +133,11 @@ public class GetDbData {
     }
 
     /**
-     *  获得各类型总数
+     * 获得各类型总数
+     *
      * @return float[][] 一维：大类型，二维：小类型
      */
-    public float[][] getDetailCounts(){ return money_count;}
+    public float[][] getDetailCounts() {
+        return money_count;
+    }
 }

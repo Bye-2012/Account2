@@ -1,9 +1,10 @@
 package com.moon.Account2;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -70,9 +71,14 @@ public class DetailActivity extends FragmentActivity {
         adapter_detail = new MyListViewAdapter(this, list_detail);
         listView_detail.setAdapter(adapter_detail);
 
-        dbHelper = new GetDbData(this,db,details);
+        dbHelper = new GetDbData(this, db, details);
     }
 
+    /**
+     * Button点击事件
+     *
+     * @param view 控件
+     */
     public void clickButton(View view) {
         int year = calendar.get(Calendar.YEAR);
         int monthOfYear = calendar.get(Calendar.MONTH);
@@ -90,7 +96,7 @@ public class DetailActivity extends FragmentActivity {
                                 date = year + "-" + WriteActivity.getMonth(monthOfYear) + "-" + WriteActivity.getDay(dayOfMonth);
                                 builder = WhereBuilder.b();
                                 builder.expr("dates", "=", date);
-                                setListData(builder);
+                                setListData(builder, 3);
                             }
                         }, year, monthOfYear, dayOfMonth);
                 dDialog.show();
@@ -106,7 +112,7 @@ public class DetailActivity extends FragmentActivity {
                                 date = year + "-" + WriteActivity.getMonth(monthOfYear);
                                 builder = WhereBuilder.b();
                                 builder.expr("dates", "like", date + "%");
-                                setListData(builder);
+                                setListData(builder, 3);
                             }
                         }, year, monthOfYear, dayOfMonth);
                 dDialog.show();
@@ -119,10 +125,10 @@ public class DetailActivity extends FragmentActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                date = year+"";
+                                date = year + "";
                                 builder = WhereBuilder.b();
                                 builder.expr("dates", "like", date + "%");
-                                setListData(builder);
+                                setListData(builder, 3);
                             }
                         }, year, monthOfYear, dayOfMonth);
                 dDialog.show();
@@ -131,17 +137,41 @@ public class DetailActivity extends FragmentActivity {
              * 按类型查找
              */
             case R.id.btn_dtl_type:
+                AlertDialog.Builder listDialog = new AlertDialog.Builder(this);
+                String[] types = getResources().getStringArray(R.array.types);
+                listDialog.setItems(types, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        builder = WhereBuilder.b();
+                        switch (i) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                                builder.expr("type", "=", i);
+                                setListData(builder, 1);
+                                break;
+                            case 5:
+                            case 6:
+                                builder.expr("type", "=", i - 5);
+                                setListData(builder, 2);
+                                break;
+                        }
+                    }
+                });
+                listDialog.show();
                 break;
         }
     }
 
     /**
      * 设置ListView数据
+     *
      * @param b 查询条件
      */
-    private void setListData(WhereBuilder b){
-        list_detail = dbHelper.getListData(b,list_detail);
-        Log.i("1111--3",date+"..."+list_detail.size()+"");
+    private void setListData(WhereBuilder b, int type) {
+        list_detail = dbHelper.getListData(b, list_detail, type);
         adapter_detail.notifyDataSetChanged();
         setCounts();
     }
@@ -149,11 +179,11 @@ public class DetailActivity extends FragmentActivity {
     /**
      * 设置统计金额
      */
-    private void setCounts(){
+    private void setCounts() {
         float[] counts = dbHelper.getCounts();
-        txt_detail_out.setText(counts[0]+"");
-        txt_detail_in.setText(counts[1]+"");
-        txt_detail_balance.setText((counts[0]-counts[1])+"");
+        txt_detail_out.setText(counts[0] + "");
+        txt_detail_in.setText(counts[1] + "");
+        txt_detail_balance.setText((counts[1] - counts[0]) + "");
     }
 
     /**

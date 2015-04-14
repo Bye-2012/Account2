@@ -79,6 +79,9 @@ public class ReportActivity extends Activity {
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         DatePickerDialog dDialog;
         switch (view.getId()) {
+            /**
+             * 按天查询
+             */
             case R.id.btn_rep_day:
                 dDialog = new DatePickerDialog(this,
                         new DatePickerDialog.OnDateSetListener() {
@@ -93,6 +96,9 @@ public class ReportActivity extends Activity {
                         }, year, monthOfYear, dayOfMonth);
                 dDialog.show();
                 break;
+            /**
+             * 按月查询
+             */
             case R.id.btn_rep_mon:
                 dDialog = new DatePickerDialog(this,
                         new DatePickerDialog.OnDateSetListener() {
@@ -107,6 +113,9 @@ public class ReportActivity extends Activity {
                         }, year, monthOfYear, dayOfMonth);
                 dDialog.show();
                 break;
+            /**
+             * 按年查询
+             */
             case R.id.btn_rep_year:
                 dDialog = new DatePickerDialog(this,
                         new DatePickerDialog.OnDateSetListener() {
@@ -130,7 +139,7 @@ public class ReportActivity extends Activity {
      * @param b 查询条件
      */
     private void getData(WhereBuilder b) {
-        dbHelper.getListData(b, new ArrayList<Map<String, Object>>());
+        dbHelper.getListData(b, new ArrayList<Map<String, Object>>(), 3);
         float[] counts = dbHelper.getCounts();
         float[][] detailCounts = dbHelper.getDetailCounts();
         my_chart_out.setData(setFloat(detailCounts[0], counts[0]), types_out);
@@ -155,7 +164,7 @@ public class ReportActivity extends Activity {
      * @return 百分比数据
      */
     private float[] setFloat(float[] money, float all) {
-        for (int i = 0; i < money.length - 1; i++) {
+        for (int i = 0; i < money.length; i++) {
             money[i] = money[i] / all;
         }
         return money;
