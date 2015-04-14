@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -27,6 +26,9 @@ public class ChartView extends View {
     private int[] colors;
 
     private int flag = 0;
+
+    private int width;
+    private int height;
 
     public ChartView(Context context) {
         this(context, null);
@@ -66,6 +68,12 @@ public class ChartView extends View {
         data = new float[]{-1};
         arrTitle = new String[]{"1"};
         colors = new int[]{Color.GREEN, Color.RED, Color.YELLOW, Color.BLACK, Color.BLUE};
+
+        /**
+         * 计算显示位置
+         */
+        width = getResources().getDisplayMetrics().widthPixels / 2 - 150;
+        height = getResources().getDisplayMetrics().heightPixels / 5;
     }
 
     @Override
@@ -89,28 +97,30 @@ public class ChartView extends View {
             textPaint.setTextSize(25);
 
             int height = 0;
-            if (data.length == 5){
+            if (data.length == 5) {
                 height = 110;
-            }else if(data.length == 2){
+            } else if (data.length == 2) {
                 height = 185;
             }
             //循环画图
             for (int i = 0; i < data.length; i++) {
                 arcPaint.setColor(colors[i]);
                 canvas.drawRect(405, height, 425, height + 20, arcPaint);
-                canvas.drawText(arrTitle[i]+" ("+(data[i]*100)+"%)", 445, height + 20, textPaint);
+                canvas.drawText(arrTitle[i] + " (" + (data[i] * 100) + "%)", 445, height + 20, textPaint);
                 height += 40;
             }
-        }else if (flag == 0){
-            textPaint.setTextSize(40);
-            switch(data.length){
+            flag = 0;
+        } else if (flag == 0) {
+            textPaint.setTextSize(50);
+            switch (data.length) {
                 case 2:
-                    canvas.drawText("暂无收入数据", 50, 80, textPaint);
+                    canvas.drawText("暂无收入数据", width, height, textPaint);
                     break;
                 case 5:
-                    canvas.drawText("暂无支出数据", 50, 80, textPaint);
+                    canvas.drawText("暂无支出数据", width, height, textPaint);
                     break;
             }
+            flag = 0;
         }
     }
 
@@ -121,10 +131,12 @@ public class ChartView extends View {
         this.data = data;
         this.arrTitle = arrTitle;
         if (data != null && arrTitle != null) {
+            float f = 0f;
             for (int i = 0; i < data.length; i++) {
-                if((int)(data[0]*1000 - 0) == 0){
-                    flag = 1;
-                }
+                f += data[i];
+            }
+            if (f == 1f) {
+                flag = 1;
             }
             invalidate();
         }

@@ -39,6 +39,12 @@ public class GetDbData {
         this.types_out = context.getResources().getStringArray(R.array.types_out);
     }
 
+    /**
+     *  获得ListView显示数据
+     * @param builder 查询条件
+     * @param list List<Map<String, Object>>
+     * @return 数据集
+     */
     public List<Map<String, Object>> getListData(WhereBuilder builder,List<Map<String,Object>> list) {
         list.clear();
         money_count[0] = new float[5];
@@ -112,9 +118,17 @@ public class GetDbData {
         return list;
     }
 
+    /**
+     *  获得收/支总数
+     * @return float[]
+     */
     public float[] getCounts() {
         return counts;
     }
 
+    /**
+     *  获得各类型总数
+     * @return float[][] 一维：大类型，二维：小类型
+     */
     public float[][] getDetailCounts(){ return money_count;}
 }

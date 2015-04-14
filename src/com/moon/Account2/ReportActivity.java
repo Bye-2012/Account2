@@ -3,9 +3,9 @@ package com.moon.Account2;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -28,6 +28,9 @@ public class ReportActivity extends Activity {
 
     @ViewInject(R.id.my_chart_out)
     private ChartView my_chart_out;
+
+    @ViewInject(R.id.txt_rep_title)
+    private TextView txt_rep_title;
 
     private GetDbData dbHelper;
 
@@ -66,6 +69,7 @@ public class ReportActivity extends Activity {
 
     /**
      * Button点击事件
+     *
      * @param view 控件
      */
     public void clickButton(View view) {
@@ -81,6 +85,7 @@ public class ReportActivity extends Activity {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 date = year + "-" + WriteActivity.getMonth(monthOfYear) + "-" + WriteActivity.getDay(dayOfMonth);
+                                txt_rep_title.setText(date + " 数据");
                                 builder = WhereBuilder.b();
                                 builder.expr("dates", "=", date);
                                 getData(builder);
@@ -94,6 +99,7 @@ public class ReportActivity extends Activity {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 date = year + "-" + WriteActivity.getMonth(monthOfYear);
+                                txt_rep_title.setText(date + " 数据");
                                 builder = WhereBuilder.b();
                                 builder.expr("dates", "like", date + "%");
                                 getData(builder);
@@ -107,6 +113,7 @@ public class ReportActivity extends Activity {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 date = year + "";
+                                txt_rep_title.setText(date + " 数据");
                                 builder = WhereBuilder.b();
                                 builder.expr("dates", "like", date + "%");
                                 getData(builder);
@@ -119,18 +126,20 @@ public class ReportActivity extends Activity {
 
     /**
      * 获得要显示的数据
+     *
      * @param b 查询条件
      */
-    private void getData(WhereBuilder b){
-        dbHelper.getListData(b,new ArrayList<Map<String, Object>>());
+    private void getData(WhereBuilder b) {
+        dbHelper.getListData(b, new ArrayList<Map<String, Object>>());
         float[] counts = dbHelper.getCounts();
         float[][] detailCounts = dbHelper.getDetailCounts();
-        my_chart_out.setData(setFloat(detailCounts[0],counts[0]), types_out);
+        my_chart_out.setData(setFloat(detailCounts[0], counts[0]), types_out);
         my_chart_in.setData(setFloat(detailCounts[1], counts[1]), types_in);
     }
 
     /**
      * 获得数组
+     *
      * @param id 数组ID
      * @return String[]
      */
@@ -140,13 +149,13 @@ public class ReportActivity extends Activity {
 
     /**
      * 组织百分比数据
+     *
      * @param money 小类型总额
-     * @param all 大类型总额
+     * @param all   大类型总额
      * @return 百分比数据
      */
     private float[] setFloat(float[] money, float all) {
-        for (int i = 0; i < money.length; i++) {
-            Log.i("1111-m",money[i]+"");
+        for (int i = 0; i < money.length - 1; i++) {
             money[i] = money[i] / all;
         }
         return money;
